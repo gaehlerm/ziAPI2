@@ -688,7 +688,7 @@ class Impedance():
 		# Select the interpolation method of the compensation data. The interpolation method is particularly important if the derivative changes strongly e.g at cut-off frequencies.
 		self._daq.set(self._path + "inerpolation", enum_.value)
 
-	class Interpolation(enum_):
+	class Interpolation(Enum):
 		linear = 0
 		pchip = 1
 
@@ -1266,8 +1266,8 @@ class Sweeper():
 		self._daq = daq
 		self._path = dev_id + "/sweeper/"
 
-	def set_device(self, device):
-		self._daq.set(self._path + "device/", device)
+	def set_device(self, dev_id):
+		self._daq.set(self._path + "device/", dev_id)
 
 	# TODO this is not how it works...
 	def sweep_frequency(self):
@@ -1283,8 +1283,21 @@ class Sweeper():
 		self._daq.set(self._path + "samplecount/", value)
 
 	def set_scan_mode(self, enum_):
-		self._daq.set(self._path + "scan/", enum_.value())
+		self._daq.set(self._path + "scan/", enum_.value)
 	
 	class ScanMode(Enum):
 		sequential = 0
-		#TODO
+		binary = 1
+		bidirectional = 2
+		reverse = 3
+
+	def set_sequence_mode(self, enum_):
+		self._daq.set(self._path + "xmapping/", enum_.value)
+
+	class SequenceMode(Enum):
+		linear = 0
+		log = 1
+
+	def set_max_bandwidth(self, value):
+		self._daq.set(self._path + "maxbandwidth/", value)
+

@@ -32,8 +32,10 @@ class GHF():
         self.currin1 = Currin(daq, dev_id, 0)
         self.currin2 = Currin(daq, dev_id, 1)
 
+        self.oscs = [Oscillator(daq, dev_id, i) for i in range(8)]
+
         self.scope = Scope(daq, dev_id, 0) # does scope need an indices?
-        # self.sweeper = Sweeper(daq, dev_id)
+        self.sweeper = Sweeper(daq, dev_id)
 
         #figure out how to deal with the 0/1 index problem
         self.demods = [Demod(daq, dev_id, i) for i in range(8)]
