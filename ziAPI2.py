@@ -1,5 +1,5 @@
 # example from the LabOne Programming manual p.41
-from enum_ import enum_
+from enum import Enum
 
 class Save():
 	def __init__(self, daq):
@@ -9,7 +9,7 @@ class Save():
 		self._daq.set("save/fileformat", FileFormat.value())
 
 	#figure out again how define enum_s
-	class FileFormat(enum_):
+	class FileFormat(Enum):
 		mat = 0
 		csv = 1
 		zview = 2
@@ -71,7 +71,7 @@ class AuxOut():
 		#Select the signal source to be represented on the Auxiliary Output.
 		self._daq.set(self._path + "outputselect", enum_.value())
 
-	class OutputSelect(enum_):
+	class OutputSelect(Enum):
 		manual = -1
 		demod_x = 0
 		demod_y = 1
@@ -124,7 +124,7 @@ class Currin():
 		# Switches the input between floating (ON) and connected grounds (OFF). This setting applies both to the voltage and the current input. It is recommended to discharge the test device before connecting or to enable this setting only after the signal source has been connected to the Signal Input in grounded mode.
 		self._daq.set(self._path + "autorange", enum_.value)
 
-	class Floating(enum_):
+	class Floating(Enum):
 		GND_connected = 0
 		floating = 1
 
@@ -176,7 +176,7 @@ class Demod():
 		# Selects the input signal for the demodulator.
 		self._daq.set(self._path + "adcselect", enum_.value)
 
-	class ADC_select_options(enum_):
+	class ADC_select_options(Enum):
 		# should signal_input, etc. start with 1? Probably yes
 		signal_input_0 = 0
 		current_input_0 = 1
@@ -274,7 +274,7 @@ class Demod():
 		# Selects the acquisition mode (i.e. triggering) or the demodulator.
 		self._daq.set(self._path + "trigger/triggeracq", enum_.value)
 
-	class TriggerMode(enum_):
+	class TriggerMode(Enum):
 		continuous = 0
 		trigger_input_0_rising = 1
 		# TODO etc.
@@ -325,7 +325,7 @@ class ExtRef():
 		# This defines the type of automatic adaptation of parameters in the PID used for Ext Ref.
 		self._daq.set(self._path + "automode", enum_.value)
 
-	class Automode(enum_):
+	class Automode(Enum):
 		off = 0
 		coefficients_only = 1
 		low_bandwidth = 2
@@ -391,7 +391,7 @@ class Impedance():
 		# Select input range control mode.
 		self._daq.set(self._path + "auto/inputrange", enum_.value())
 
-	class InputRangeControlMode(enum_):
+	class InputRangeControlMode(Enum):
 		manual = 0
 		auto = 1
 		zone = 2
@@ -597,7 +597,7 @@ class Impedance():
 		# Demodulator used for current demodulation.
 		self._daq.set(self._path + "current/inputselect", enum_.value())
 
-	class InputSelect(enum_):
+	class InputSelect(Enum):
 		current_input0 = 0
 		auxiliary_input0 = 8
 		auxiliary_input1 = 9 
@@ -700,7 +700,7 @@ class Impedance():
 		# Select impedance measurement mode. 
 		self._daq.set(self._path + "inerpolation", enum_.value)
 
-	class Interpolation(enum_):
+	class Interpolation(Enum):
 		# TODO find better names
 		_4_terminal = 0
 		_2_terminal = 1
@@ -709,7 +709,7 @@ class Impedance():
 		# Representation of the complex impedance value Z by two real values accessible as Parameter 1 and Parameter 2 on all user interface displays. 
 		self._daq.set(self._path + "model", enum_.value())
 
-	class Interpolation(enum_):
+	class Interpolation(Enum):
 		# TODO find better names
 		r_c_parallel = 0 
 		r_c_series = 1 
@@ -759,7 +759,7 @@ class Impedance():
 		# Selects the output channel that the excitation voltage drives.
 		self._daq.set(self._path + "output/select", enum_.value())
 
-	class OutputSelect(enum_):
+	class OutputSelect(Enum):
 		# TODO what is this enum_ supposed to do??
 		# TODO use index 1 or 0?
 		signal_output1 = 0 
@@ -776,7 +776,7 @@ class Impedance():
 		# Select the voltage input used for a four-terminal impedance measurement.
 		self._daq.set(self._path + "voltage/inputselect", enum_.value())
 
-	class OutputSelect(enum_):
+	class OutputSelect(Enum):
 		#TODO index?
 		signal_input1 = 0
 		auxiliary_input1 = 8 
@@ -824,7 +824,7 @@ class Modulation():
 		# Select Signal Input for the carrier demodulation 
 		self._daq.set(self._path + "voltage/inputselect", enum_.value)
 
-	class InputSelect(enum_):
+	class InputSelect(Enum):
 		#TODO is this enum_ redundant?
 		signal_input_1 = 0
 
@@ -862,7 +862,7 @@ class Modulation():
 		# In FM mode, choose to work with either modulation index or peak deviation. The modulation index equals peak deviation divided by modulation frequency. 
 		self._daq.set(self._path + "freqdevenable", enum_.value())
 
-	class FrequencyDeviationMode(enum_):
+	class FrequencyDeviationMode(Enum):
 		modulation_index = 0
 		peak_eviation = 1
 
@@ -874,7 +874,7 @@ class Modulation():
 		# Select the modulation mode. 
 		self._daq.set(self._path + "index", enum_.value)
 
-	class FM_Mode(enum_):
+	class FM_Mode(Enum):
 		am = 0
 		fm = 1
 		manual = 2
@@ -883,7 +883,7 @@ class Modulation():
 		# Select Signal Output.
 		self._daq.set(self._path + "output", enum_.value)
 
-	class Output(enum_):
+	class Output(Enum):
 		none = 0
 		signal_output_1 = 1
 
@@ -913,7 +913,7 @@ class Modulation():
 		#Enabling of the first sideband and selection of the position of the sideband relative to the carrier frequency for manual mode.
 		self._daq.set(self._path + "sidebands/" + str(m) + "/mode", enum_.value)
 
-	class SelectSideband(enum_):
+	class SelectSideband(Enum):
 		off = 0
 		upper = 1
 		lower = 2
@@ -942,10 +942,12 @@ class Oscillator():
 		self._daq = daq
 		self._path = dev_id + "/oscs/" + str(n) + "/"
 
-	def set_oscselect(self, value):
+	def set_frequency(self, value):
 		#Frequency control for each oscillator.
 		self._daq.set(self._path + "freq", value)
 
+	def get_frequency(self):
+		return self._daq.get(self._path + "freq")
 
 class PID():
 	def  __init__(self, daq, dev_id, n):
@@ -1010,7 +1012,7 @@ class PID():
 		#Select input source of PID controller.
 		self._daq.set(self._path + "input", enum_.value)
 
-	class PID_Input(enum_):
+	class PID_Input(Enum):
 		demod_x = 0
 		demod_y = 1
 		demod_r = 2
@@ -1042,7 +1044,7 @@ class PID():
 		#Sets the operation mode of the PID module.
 		self._daq.set(self._path + "mode", enum_.value)
 
-	class PID_Mode(enum_):
+	class PID_Mode(Enum):
 		pid = 0
 		pll = 1
 		extref = 2
@@ -1051,7 +1053,7 @@ class PID():
 		#Select output of the PID controller.
 		self._daq.set(self._path + "output", enum_.value)
 
-	class Output(enum_):
+	class Output(Enum):
 		signal_output = 0
 		oscillator_frequency = 1
 		demod_phase = 2 
@@ -1082,7 +1084,7 @@ class PID():
 		#This defines the type of automatic adaptation of parameters in the PID.
 		self._daq.set(self._path + "pll/automode", enum_.value)
 
-	class PLL_automode(enum_):
+	class PLL_automode(Enum):
 		no_adaption = 0 
 		pid_coeffs = 1
 		pid_coeffs_filter_low_bw = 2 
@@ -1165,7 +1167,7 @@ class Scope():
 		# Selects between sample decimation and sample averaging. Averaging avoids aliasing, but may conceal signal peaks.
 		self._daq.set(self._path + "channel/" + str(m) + "/bwlimit", enum_.value)
 
-	class AveragingType(enum_):
+	class AveragingType(Enum):
 		sample_averaging = 0
 		sample_decimation = 1
 
@@ -1259,3 +1261,30 @@ class Demodulator():
 	def get_sample_as_event(self):
 		self._daq.getAsEvent(self._path + "sample")
 
+class Sweeper():
+	def __init__(self, daq, dev_id) -> None:
+		self._daq = daq
+		self._path = dev_id + "/sweeper/"
+
+	def set_device(self, device):
+		self._daq.set(self._path + "device/", device)
+
+	# TODO this is not how it works...
+	def sweep_frequency(self):
+		self._daq.set(self._path + "gridnode/",) # set the node path here... )
+
+	def set_start_value(self, value):
+		self._daq.set(self._path + "start/", value)
+
+	def set_stop_value(self, value):
+		self._daq.set(self._path + "stop/", value)
+
+	def set_samplecount(self, value):
+		self._daq.set(self._path + "samplecount/", value)
+
+	def set_scan_mode(self, enum_):
+		self._daq.set(self._path + "scan/", enum_.value())
+	
+	class ScanMode(Enum):
+		sequential = 0
+		#TODO
