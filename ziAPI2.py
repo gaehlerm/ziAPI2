@@ -5,16 +5,33 @@ class Save():
 	def __init__(self, daq):
 		self._daq = daq
 
-	def set_fileformat(self, FILEFORMAT):
-		self._daq.set("save/fileformat", FILEFORMAT.value())
+	def set_fileformat(self, FileFormat):
+		self._daq.set("save/fileformat", FileFormat.value())
 
-#figure out again how define enums
-class FILEFORMAT(Enum):
-	mat = 0
-	csv = 1
-	zview = 2
-	sxm = 3
-	hdf5 = 4
+	#figure out again how define enums
+	class FileFormat(Enum):
+		mat = 0
+		csv = 1
+		zview = 2
+		sxm = 3
+		hdf5 = 4
+
+class System():
+	def __init__(self, daq, dev_id):
+		self._daq = daq
+		self._path = dev_id + "/system/properties"
+
+	def get_timebase(self):
+		return self._daq.get(self._path + "/timebase")
+
+
+class Status():
+	def __init__(self, daq, dev_id):
+		self._daq = daq
+		self._path = dev_id + "/status"
+
+	def get_current_timestamp(self):
+		return self._daq.get(self._path + "/time")
 
 class AuxIn():
 	def __init__(self, daq, dev_id, n):
@@ -253,9 +270,9 @@ class Demod():
 		# Sets the integration time constant or in other words, the cutoff frequency of the demodulator low pass filter.
 		self._daq.set(self._path + "sinc", value)
 
-	def set_trigger_mode(self, enum):
+	def set_trigger_mode(self, enum_):
 		# Selects the acquisition mode (i.e. triggering) or the demodulator.
-		self._daq.set(self._path + "trigger", enum.value())
+		self._daq.set(self._path + "trigger/triggeracq", enum_.value)
 
 	class TriggerMode(Enum):
 		continuous = 0

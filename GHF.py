@@ -1,9 +1,11 @@
 from ziAPI2 import *
 
-class MF():
-	#add some docstring?
+class GHF():
+    	#add some docstring?
 
     def __init__(self, daq, dev_id):
+        # just copied from the MF. Should be adapted to GHF.
+
         # self._options = daq.get() #what is the node for the device options?
 
         # not yet implemented:
@@ -11,6 +13,8 @@ class MF():
         # self.zi = Zi(daq)
         # self.config = Config(daq)
         # self.debug = Debug(daq)
+        self.system = System(daq, dev_id)
+        self.status = Status(daq, dev_id)
 
         # # is devices a list of Device?
         # self.devices = Devices(daq)
@@ -37,4 +41,3 @@ class MF():
         # self.signal_input_1 = SignalInput(daq, dev_id, 0)
         # self.signal_input_2 = SignalInput(daq, dev_id, 1)
         #add all other modules
-
