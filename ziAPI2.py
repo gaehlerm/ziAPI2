@@ -160,10 +160,10 @@ class Currin():
 class Sample():
 	def __init__(self, daq, path):
 		self._daq = daq
-		self._path = path
+		self._path = path + "sample"
 
 	def subscribe(self):
-		self._daq.subscribe(self._path + "sample")
+		self._daq.subscribe(self._path)
 
 
 class Demod():
@@ -936,11 +936,18 @@ class Modulation():
 		#Sets the integration time constant or in other words, the cutoff frequency of the low-pass filter for the sideband demodulation.
 		self._daq.set(self._path + "sidebands/" + str(m) + "/timeconstant", value)
 
+class Frequency():
+	def __init__(self, path):
+		self._path = path + "frequency"
+
+	def get_path(self):
+		return self._path
 
 class Oscillator():
 	def  __init__(self, daq, dev_id, n):
 		self._daq = daq
 		self._path = dev_id + "/oscs/" + str(n) + "/"
+		self.frequency = Frequency(self._path)
 
 	def set_frequency(self, value):
 		#Frequency control for each oscillator.
@@ -948,6 +955,7 @@ class Oscillator():
 
 	def get_frequency(self):
 		return self._daq.get(self._path + "freq")
+
 
 class PID():
 	def  __init__(self, daq, dev_id, n):
@@ -1263,15 +1271,18 @@ class Demodulator():
 
 class Sweeper():
 	def __init__(self, daq, dev_id) -> None:
-		self._daq = daq
-		self._path = dev_id + "/sweeper/"
+		self._daq = daq # + "sweeper" ?
+		self._path = dev_id + "/sweeper/" # does this need the dev_id? It will be set on the next line
+		self.set_device(dev_id)
 
 	def set_device(self, dev_id):
 		self._daq.set(self._path + "device/", dev_id)
 
 	# TODO this is not how it works...
-	def sweep_frequency(self):
-		self._daq.set(self._path + "gridnode/",) # set the node path here... )
+	# def sweep_frequency(self):
+	# 	self._daq.set(self._path + "gridnode/",) # set the node path here... )
+	def sweep_parameter(self, parameter):
+		self._daq.set(self._path + "gridnode/", parameter.get_path())
 
 	def set_start_value(self, value):
 		self._daq.set(self._path + "start/", value)

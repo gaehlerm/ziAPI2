@@ -52,25 +52,19 @@ def test_GHF_poll():
 	assert NodeLogLine("poll", '', '') in node_log
 
 def test_GHF_sweeper():
+	# Example from https://github.com/zhinst/labone-api-examples/blob/release-23.06/ghfli/python/example_sweeper.py
 	daq = NodeLogDAQ()
 	ghf = GHF(daq, "dev1234")
+	# Is it a GHF sweeper or a DAQ sweeper?
 	sweeper = ghf.sweeper
 	
-	sweeper.set_device("dev1234")
-    # Configure the Sweeper Module's parameters.
-    # Set the device that will be used for the sweep - this parameter must be set first.
+    # Specify the frequency of the oscillator should be swept.
+	sweeper.sweep_parameter(ghf.oscs[0].frequency)
 
-    # Specify the frequency of the oscillator `osc_index` should be swept.
-	# TODO figure out how to do this
-	# sweeper.set_frequency()
-
-    # Set the `start` and `stop` values of the gridnode value interval we will use in the sweep.
 	sweeper.set_start_value(100)
 	sweeper.set_stop_value(1000)
 	sweeper.set_samplecount(50)
-	# Specify that the sweep should go from start to stop.
 	sweeper.set_scan_mode(Sweeper.ScanMode.sequential)
-	# Specify that a linear spacing should be used for the grid points.
 	sweeper.set_sequence_mode(Sweeper.SequenceMode.linear)
 	sweeper.set_max_bandwidth(333)
 
@@ -78,7 +72,17 @@ def test_GHF_sweeper():
 	ghf.demods[0].sample.subscribe()
 	
 	node_log = daq.get_node_log()
-	# assert NodeLogLine("set", 'dev1234/demods/0/enable', 1) in node_log
+	print(node_log)
+	assert NodeLogLine('set', 'dev1234/sweeper/device/', 'dev1234') in node_log
+	assert NodeLogLine('set', 'dev1234/sweeper/gridnode/', 'dev1234/oscs/0/frequency') in node_log
+	assert NodeLogLine('set', 'dev1234/sweeper/start/', 100) in node_log
+	assert NodeLogLine('set', 'dev1234/sweeper/stop/', 1000) in node_log
+	assert NodeLogLine('set', 'dev1234/sweeper/samplecount/', 50) in node_log
+	assert NodeLogLine('set', 'dev1234/sweeper/samplecount/', 50) in node_log
+	assert NodeLogLine('set', 'dev1234/sweeper/scan/', 0) in node_log
+	assert NodeLogLine('set', 'dev1234/sweeper/xmapping/', 0) in node_log
+	assert NodeLogLine('set', 'dev1234/sweeper/maxbandwidth/', 333) in node_log  
+	assert NodeLogLine('subscribe', 'dev1234/demods/0/sample', '') in node_log  
 
 
 
