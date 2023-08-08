@@ -25,5 +25,11 @@ class NodeLogDAQ:
 	def subscribe(self, node):
 		self._node_log.append(NodeLogLine("subscribe", node, ''))
 
+	def unsubscribe(self, node):
+		self._node_log.append(NodeLogLine("unsubscribe", node, ''))
+
+	def unsubscribe_all(self):
+		self._node_log.append(NodeLogLine("unsubscribe", '*', ''))
+
 	def get_node_log(self):
 		return self._node_log

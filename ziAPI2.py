@@ -1,3 +1,5 @@
+# Copyright Marco Gähler
+
 # example from the LabOne Programming manual p.41
 from enum import Enum
 
@@ -21,9 +23,30 @@ class System():
 		self._daq = daq
 		self._path = dev_id + "/system/properties"
 
+		self.clock = Clock(self._daq, self._path)
+
 	def get_timebase(self):
 		return self._daq.get(self._path + "/timebase")
+	
+	
+	def set_software_trigger(self):
+		self._daq.set(self._path + "/swtriggers/0/single", 1)
 
+	def load_preset(self):
+		self._daq.set(self._path + "/preset/load", 1)
+
+	def wait_for_state_change(self, value, timeout):
+		# TODO add a sync?
+		# TODO how does this work exactly?
+		self._daq.set(self._path + "/preset/busy", 1)
+
+class Clock():
+	def __init__(self, daq, path) -> None:
+		self._daq = daq
+		self._path = path + "/clocks"
+
+	def set_sampling_rate(self, value):
+		self._daq.set(self._path + "/sampleclock/freq", value)
 
 class Status():
 	def __init__(self, daq, dev_id):
@@ -278,6 +301,26 @@ class Demod():
 		continuous = 0
 		trigger_input_0_rising = 1
 		# TODO etc.
+
+	def set_trigger_source(self, enum_):
+		self._daq.set(self._path + "trigger/source", enum_.value)
+
+	class TriggerSource(Enum):
+		software_trigger = 1024
+		# TODO etc.
+
+	def enable_triggered_acquisition(self):
+		self._daq.set(self._path + "trigger/triggeracq", 1)
+
+	def disable_triggered_acquisition(self):
+		self._daq.set(self._path + "trigger/triggeracq", 0)
+
+	def set_burst_length(self, length):
+		self._daq.set(self._path + "burstlen", length)
+
+	def set_data_rate(self, rate):
+		self._daq.set(self._path + "rate", rate)
+
 
 
 class DIO():
