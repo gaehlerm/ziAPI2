@@ -1,6 +1,5 @@
 # Copyright Marco Gähler
 
-# example from the LabOne Programming manual p.41
 from enum import Enum
 
 class Save():
@@ -10,13 +9,13 @@ class Save():
 	def set_fileformat(self, FileFormat):
 		self._daq.set("save/fileformat", FileFormat.value())
 
-	#figure out again how define enum_s
 	class FileFormat(Enum):
-		mat = 0
+		matlab = 0
 		csv = 1
 		zview = 2
 		sxm = 3
 		hdf5 = 4
+
 
 class System():
 	def __init__(self, daq, dev_id):
@@ -28,7 +27,6 @@ class System():
 	def get_timebase(self):
 		return self._daq.get(self._path + "/timebase")
 	
-	
 	def set_software_trigger(self):
 		self._daq.set(self._path + "/swtriggers/0/single", 1)
 
@@ -36,9 +34,10 @@ class System():
 		self._daq.set(self._path + "/preset/load", 1)
 
 	def wait_for_state_change(self, value, timeout):
-		# TODO add a sync?
-		# TODO how does this work exactly?
+		# TODO add a sync before the set?
+		# TODO how does this node work exactly?
 		self._daq.set(self._path + "/preset/busy", 1)
+
 
 class Clock():
 	def __init__(self, daq, path) -> None:
@@ -48,6 +47,7 @@ class Clock():
 	def set_sampling_rate(self, value):
 		self._daq.set(self._path + "/sampleclock/freq", value)
 
+
 class Status():
 	def __init__(self, daq, dev_id):
 		self._daq = daq
@@ -55,6 +55,7 @@ class Status():
 
 	def get_current_timestamp(self):
 		return self._daq.get(self._path + "/time")
+
 
 class AuxIn():
 	def __init__(self, daq, dev_id, n):
@@ -68,6 +69,7 @@ class AuxIn():
 
 	def get_sample(self):
 		return self._daq.get(self._path + "sample")
+
 
 class AuxOut():
 	def  __init__(self, daq, dev_id, n):
@@ -114,10 +116,10 @@ class AuxOut():
 		# Multiplication factor to scale the signal. Auxiliary Output Value = (Signal+Preoffset)*Scale + Offset
 		self._daq.set(self._path + "scale", value)
 
-	def set_tipprotect_enable(self):
+	def enable_tipprotect(self):
 		self._daq.set(self._path + "tipprotect/preoffset", True)
 
-	def set_tipprotect_disable(self):
+	def disable_tipprotect(self):
 		self._daq.set(self._path + "tipprotect/preoffset", False)
 
 	def set_tipprotect_polarity(self, value):
@@ -140,10 +142,10 @@ class Currin():
 		self._daq = daq
 		self._path = dev_id + "/currin/" + str(n) + "/"
 
-	def set_autorange(self,value):
+	def set_autorange(self, value):
 		self._daq.set(self._path + "autorange", value)
 
-	def set_floating(self,enum_):
+	def set_floating(self, enum_):
 		# Switches the input between floating (ON) and connected grounds (OFF). This setting applies both to the voltage and the current input. It is recommended to discharge the test device before connecting or to enable this setting only after the signal source has been connected to the Signal Input in grounded mode.
 		self._daq.set(self._path + "autorange", enum_.value)
 
@@ -151,7 +153,7 @@ class Currin():
 		GND_connected = 0
 		floating = 1
 
-	def set_max(self,enum_):
+	def set_max(self, enum_):
 		# Gives the maximum measured input current (peak value) normalized to input range.
 		self._daq.set(self._path + "max", enum_.value)
 
@@ -159,12 +161,12 @@ class Currin():
 		# Gives the minimum measured input current (peak value) normalized to input range.
 		self._daq.set(self._path + "min", enum_.value)
 
-	#what are the values here?
-	def input_enable(self):
+	# what are the values here?
+	def enable_input(self):
 		# Enables the current input.
 		self._daq.set(self._path + "on", 0)
 
-	def input_disable(self):
+	def disable_input(self):
 		# Disables the current input.
 		self._daq.set(self._path + "off", 1)
 
@@ -179,6 +181,7 @@ class Currin():
 	def set_scaling(self, value):
 		#Applies the given scale factor to the current input.
 		self._daq.set(self._path + "scaling", value)
+
 
 class Sample():
 	def __init__(self, daq, path):
@@ -213,11 +216,11 @@ class Demod():
 		auxiliary_input_1 = 9
 		demod_constant_input = 174
 
-	def enable(self, ):
+	def enable(self):
 		# Enables the data acquisition for the corresponding demodulator. Note: increasing number of active demodulators increases load on the physical connection to the host computer.
 		self._daq.set(self._path + "enable", 1)
 
-	def disable(self, ):
+	def disable(self):
 		# Disables the data acquisition for the corresponding demodulator.
 		self._daq.set(self._path + "enable", 0)
 
@@ -322,7 +325,6 @@ class Demod():
 		self._daq.set(self._path + "rate", rate)
 
 
-
 class DIO():
 	def  __init__(self, daq, dev_id, n):
 		self._daq = daq
@@ -353,6 +355,7 @@ class DIO():
 	def set_output(self, value):
 		# Sets the value of the DIO output for those bytes where 'drive' is enabled.
 		self._daq.set(self._path + "output", value)
+
 
 class ExtRef():
 	def  __init__(self, daq, dev_id, n):
@@ -394,6 +397,7 @@ class ExtRef():
 		# TODO should we change here the first index to 1?
 		return self._daq.get(self._path + "oscselect")
 
+
 class Features():
 	def  __init__(self, daq, dev_id):
 		self._daq = daq
@@ -415,6 +419,7 @@ class Features():
 		# Returns the device serial number.
 		return self._daq.get(self._path + "serial")
 
+
 class Impedance():
 	def  __init__(self, daq, dev_id, n):
 		self._daq = daq
@@ -422,7 +427,7 @@ class Impedance():
 
 	def set_AC(self, value):
 		# Defines the input coupling for the Signal Inputs. AC coupling inserts a high-pass filter.
-		#TODO ??
+		#TODO how does this node work?
 		self._daq.set(self._path + "ac", value)
 
 	def enable_automatic_bandwidth_control(self, ):
@@ -456,7 +461,7 @@ class Impedance():
 
 	def enable_DC_bias(self, ):
 		# DC bias voltage applied across the device under test. Both positive and negative bias voltages are supported. In a 4-terminal measurement, the bias voltage is limited by the maximum common voltage input range of the device. In a 2-terminal measurement, the bias voltage can be larger because the voltage inputs are not connected.
-		# TODO is the 0/1 here correct? 
+		# TODO is the 0/1 here correct? And what is the node name?
 		self._daq.set(self._path + "auto/output", 0)
 
 	def get_active_internal_calibration(self, ):

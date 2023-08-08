@@ -7,13 +7,12 @@ from MF import *
 from GHF import *
 from HDAWG import *
 
-# TODO The node paths are not always correct. This still has to be fixed.
+# TODO The node paths are not always correct. This has to be fixed for the final implementation.
 
 def test_MF_poll():	
 	# Example from the Labone Programming manual, p.43
 	daq = NodeLogDAQ()
 	# Enable the demodulator output and set the transfer rate.
-	# This ensure the device actually pushes data to the Data Server.
 	mf = MF(daq, "dev2006")
 	demods = [0,4]
 	for i in demods:
@@ -21,7 +20,6 @@ def test_MF_poll():
 		mf.demods[i].set_rate(10e3)
 		mf.demods[i].sample.subscribe()
 
-	time.sleep(0.001) # Subscribed data is being accumulated by the Data Server.
 	_ = daq.poll(0.020, 10, 0, True)
 
 	node_log = daq.get_node_log()
@@ -60,7 +58,7 @@ def test_GHF_sweeper():
 	# Example from https://github.com/zhinst/labone-api-examples/blob/release-23.06/ghfli/python/example_sweeper.py
 	daq = NodeLogDAQ()
 	ghf = GHF(daq, "dev1234")
-	# TODO: Is it a GHF sweeper or a DAQ sweeper?
+	# TODO: Is it a GHF sweeper or a DAQ sweeper? Implementing it as a daq.sweeper would be difficult.
 	sweeper = ghf.sweeper
 	
 	sweeper.sweep_parameter(ghf.oscs[0].frequency)
