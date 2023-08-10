@@ -3,9 +3,11 @@
 import time
 
 from test_util import *
-from MF import *
-from GHF import *
-from HDAWG import *
+from devices.MF import MF
+from devices.GHF import GHF
+from devices.HDAWG import HDAWG
+from devices.DeviceComponents import Demod
+from modules.Sweeper import Sweeper
 
 # TODO The node paths are not always correct. This has to be fixed for the final implementation.
 

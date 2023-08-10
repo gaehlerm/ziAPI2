@@ -1,40 +1,14 @@
 from ziAPI2 import *
 
-from modules.Sweeper import Sweeper 
-from modules.Precompensation import Precompensation
+from modules.Scope import Scope
+from modules.Sweeper import Sweeper
+from devices.DeviceComponents import *
 
-class Wave():
-    def __init__(self, daq, path) -> None:
-        self._daq = daq
-        self._path = path + "/wave/"
-        
-        self.input = Input(self._daq, self._path)
-
-class Input():
-    def __init__(self, daq, path) -> None:
-        self._daq = daq
-        self._path = path + "input/"
-
-    def set_source(self, value):
-        self._daq.set(self._path + "source", value)
-
-# class Precompensation():
-#     def __init__(self, daq, dev_id) -> None:
-#         self._daq = daq
-#         self._path = dev_id
-#         self._daq.set(self._path + "/device", dev_id)
-
-#         self.exponentials = [Exponentials(self._daq, self._path, i) for i in range(4)] # TODO?
-#         self.wave = Wave(daq, dev_id)
-
-#     def get_sampling_rate(self):
-#         return self._daq.get(self._path + "/samplingfreq") # TODO which value to return here?
-
-class HDAWG():
-    	#add some docstring?
+class GHF():
+    #add some docstring?
 
     def __init__(self, daq, dev_id):
-        # TODO: just copied from the GHF. Should be adapted to HD.
+        # TODO: just copied from the MF. Should be adapted to GHF.
 
         # self._options = daq.get() #what is the node for the device options?
 
@@ -62,8 +36,15 @@ class HDAWG():
         self.currin1 = Currin(daq, dev_id, 0)
         self.currin2 = Currin(daq, dev_id, 1)
 
-        # add all modules
-        self.precompensation = Precompensation(daq, dev_id)
+        num_oscs = 8
+        self.oscs = [Oscillator(daq, dev_id, i) for i in range(num_oscs)]
+
+        #figure out how to deal with the 0/1 index problem
+        num_demods = 8
+        self.demods = [Demod(daq, dev_id, i) for i in range(num_demods)]
+
+        # Modules
+        self.scope = Scope(daq, dev_id, 0) # does scope need an indices?
         self.sweeper = Sweeper(daq, dev_id)
 
         # self.signal_input_1 = SignalInput(daq, dev_id, 0)
