@@ -1,0 +1,3 @@
+
+class QuantumAnalyzer():
+	pass

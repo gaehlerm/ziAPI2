@@ -1,4 +1,6 @@
 from ziAPI2 import *
+from modules.Scope import Scope
+from modules.Sweeper import Sweeper
 
 class MF():
 	#add some docstring?
@@ -24,15 +26,16 @@ class MF():
         self.auxout1 = AuxOut(daq, dev_id, 0)
         self.auxout2 = AuxOut(daq, dev_id, 1)
 
-        #how many currins are there for the MF?
+        # how many currins are there for the MF?
         self.currin1 = Currin(daq, dev_id, 0)
         self.currin2 = Currin(daq, dev_id, 1)
 
-        self.scope = Scope(daq, dev_id, 0) # does scope need an indices?
-        # self.sweeper = Sweeper(daq, dev_id)
-
         #figure out how to deal with the 0/1 index problem
         self.demods = [Demod(daq, dev_id, i) for i in range(8)]
+
+        # The modules are not really part of the device, but it's the easiest to treat them this way.
+        self.scope = Scope(daq, dev_id, 0) # does scope need an indice?
+        self.sweeper = Sweeper(daq, dev_id)
 
         # self.signal_input_1 = SignalInput(daq, dev_id, 0)
         # self.signal_input_2 = SignalInput(daq, dev_id, 1)

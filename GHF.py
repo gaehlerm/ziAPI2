@@ -1,7 +1,10 @@
 from ziAPI2 import *
 
+from modules.Scope import Scope
+from modules.Sweeper import Sweeper
+
 class GHF():
-    	#add some docstring?
+    #add some docstring?
 
     def __init__(self, daq, dev_id):
         # TODO: just copied from the MF. Should be adapted to GHF.
@@ -35,12 +38,13 @@ class GHF():
         num_oscs = 8
         self.oscs = [Oscillator(daq, dev_id, i) for i in range(num_oscs)]
 
-        self.scope = Scope(daq, dev_id, 0) # does scope need an indices?
-        self.sweeper = Sweeper(daq, dev_id)
-
         #figure out how to deal with the 0/1 index problem
         num_demods = 8
         self.demods = [Demod(daq, dev_id, i) for i in range(num_demods)]
+
+        # Modules
+        self.scope = Scope(daq, dev_id, 0) # does scope need an indices?
+        self.sweeper = Sweeper(daq, dev_id)
 
         # self.signal_input_1 = SignalInput(daq, dev_id, 0)
         # self.signal_input_2 = SignalInput(daq, dev_id, 1)
