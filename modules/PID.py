@@ -212,15 +212,19 @@ class PID():
 		return self._daq.get(self._path + "value")
 	
 	def get_phase_margin(self):
+		# Simulated phase margin of the PID with the current settings. The phase margin should be greater than 45 deg and preferably greater than 65 deg for stable conditions.
 		return self._daq.get(self._path + "pm")
 	
 	def get_phase_margin_frequency(self):
+		# Simulated phase margin frequency.
 		return self._daq.get(self._path + "pmfreq")
 	
 	def get_progress(self):
+		# Reports the progress of a PID Advisor action as a value between 0 and 1.
 		return self._daq.get(self._path + "progress")
 	
 	def enable_response(self):
+		# Set to 1 to calculate the Bode and the step response plot data from the current pid/* parameters (only relevant when auto=0). The module sets response back to 0 when the plot data has been calculated.
 		self._daq.set(self._path + "resonse", 1)
 
 	class Stable(Enum):
@@ -228,33 +232,43 @@ class PID():
 		no_stable_solution = 0
 
 	def get_stable_indication(self):
+		# If equal to 1, the PID Advisor found a stable solution with the given settings. If equal to 0, the solution was deemed instable - revise your settings and rerun the PID Advisor.
 		return Stable(self._daq.get(self._path + "stable"))
 	
 	def get_step_response(self):
+		# The resulting step response data of the PID Advisor’s simulation.
 		return self._daq.get(self._path + "step")
 	
 	def get_target_fail(self):
+		# A value of 1 indicates the simulated PID BW is smaller than the Target BW.
 		return self._daq.get(self._path + "targetfail")
 	
 	def set_closed_loop(self, value):
+		# Switch the response calculation mode between closed or open loop.
 		self._daq.set(self._path + "tf/closedloop", value)
 
 	def set_tf_input(self, value):
+		# Start point for the plant response simulation for open or closed loops.
 		self._daq.set(self._path + "tf/input", value)
 
 	def set_tf_output(self, value):
+		# End point for the plant response simulation for open or closed loops.
 		self._daq.set(self._path + "tf/output", value)
 
 	def send_pid_to_device(self):
+		# Set to 1 to transfer the calculated PID advisor data to the device, the module will immediately reset the parameter to 0 and configure the instrument’s nodes.
 		self._daq.set(self._path + "todevice", 1)
 
 	def enable_tuning(self):
+		# If enabled, optimize the instrument’s PID parameters so that the noise of the closed- loop system gets minimized. The HF2 doesn’t support tuning.
 		self._daq.set(self._path + "tune", 1)
 
 	def disable_tuning(self):
+		# If enabled, optimize the instrument’s PID parameters so that the noise of the closed- loop system gets minimized. The HF2 doesn’t support tuning.
 		self._daq.set(self._path + "tune", 0)
 
 	def set_tuner_average_time(self, value):
+		# Time for a tuner iteration.
 		self._daq.set(self._path + "tuner/averagetime", value)
 
 	class TunerMode(Enum):
@@ -264,4 +278,5 @@ class PID():
 		tune_d_filter_limit = 3
 
 	def set_tuner_mode(self, enum_):
+		# Select tuner mode. 
 		self._daq.set(self._path + "tuner/mode", enum_.value)
