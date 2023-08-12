@@ -568,7 +568,6 @@ class Demod():
 		trigger_input_0_rising = 1
 		# TODO etc.
 
-
 	def enable_triggered_acquisition(self):
 		self._daq.set(self._path + "trigger/triggeracq", 1)
 
@@ -582,7 +581,7 @@ class Demod():
 		self._daq.set(self._path + "rate", rate)
 
 class Demodulator():
-	# Demodulator vs. Demod?
+	# TODO difference Demodulator vs. Demod?
 	def __init__(self, daq, dev_id, index):
 		self._daq = daq
 		self._path = dev_id + "/demods/" + str(index) + "/"
@@ -611,3 +610,25 @@ class DUT():
 	def set_damping(self, value):
 		self._daq.set(self._path + "damping", value)
 
+	def set_delay(self, value):
+		self._daq.set(self._path + "delay", value)
+
+	def set_modeled_resonance_frequency(self, value):
+		self._daq.set(self._path + "fcenter", value)
+
+	def set_gain(self, value):
+		self._daq.set(self._path + "gain", value)
+
+	def set_q(self, value):
+		self._daq.set(self._path + "q", value)
+
+	def set_source(self, enum_):
+		self._daq.set(self._path + "source", enum_.value)
+
+	class Source(Enum):
+		low_pass_1st_order = 1
+		low_pass_2nd_order = 2
+		resonator_frequency = 3
+		internal_pll = 4
+		vco = 5
+		resonator_amplitude = 6

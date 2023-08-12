@@ -1,8 +1,15 @@
+from enum import Enum
 
 class PID():
 	def  __init__(self, daq, dev_id, n):
 		self._daq = daq
 		self._path = dev_id + "/pid/" + str(n) + "/"
+
+	def set_auto_bw(self, value):
+		self._daq.set(self._path + "autobw", value)
+
+	def set_auto_limit(self, value):
+		self._daq.set(self._path + "autolimit", value)
 
 	def set_center(self, value):
 		#Sets the center value for the PID output. After adding the Center value, the signal is clamped to Center + Lower Limit and Center + Upper Limit.
@@ -15,7 +22,7 @@ class PID():
 	def get_D(self, value):
 		#PID derivative gain.
 		return self._daq.get(self._path + "D")
-
+	
 	def set_oscselect(self, enum_):
 		#Indicates the signal source which is connected to the chosen input demodulator channel.
 		#TODO this enum_ is redundant. -> move it out of the classes
@@ -149,6 +156,9 @@ class PID():
 		# PID sampling rate and update rate of PID outputs. Needs to be set substantially higher than the targeted loop filter bandwidth.
 		self._daq.set(self._path + "rate", value)
 
+	def set_target_bandwidth(self, value):
+		self._daq.set(self._path + "targetbw", value)
+
 	def set_PID_setpoint(self, value):
 		# PID controller setpoint.
 		self._daq.set(self._path + "setpoint", value)
@@ -200,3 +210,58 @@ class PID():
 	def get_PID_value(self, ):
 		# Gives the current PID output value.
 		return self._daq.get(self._path + "value")
+	
+	def get_phase_margin(self):
+		return self._daq.get(self._path + "pm")
+	
+	def get_phase_margin_frequency(self):
+		return self._daq.get(self._path + "pmfreq")
+	
+	def get_progress(self):
+		return self._daq.get(self._path + "progress")
+	
+	def enable_response(self):
+		self._daq.set(self._path + "resonse", 1)
+
+	class Stable(Enum):
+		stable_solution = 1
+		no_stable_solution = 0
+
+	def get_stable_indication(self):
+		return Stable(self._daq.get(self._path + "stable"))
+	
+	def get_step_response(self):
+		return self._daq.get(self._path + "step")
+	
+	def get_target_fail(self):
+		return self._daq.get(self._path + "targetfail")
+	
+	def set_closed_loop(self, value):
+		self._daq.set(self._path + "tf/closedloop", value)
+
+	def set_tf_input(self, value):
+		self._daq.set(self._path + "tf/input", value)
+
+	def set_tf_output(self, value):
+		self._daq.set(self._path + "tf/output", value)
+
+	def send_pid_to_device(self):
+		self._daq.set(self._path + "todevice", 1)
+
+	def enable_tuning(self):
+		self._daq.set(self._path + "tune", 1)
+
+	def disable_tuning(self):
+		self._daq.set(self._path + "tune", 0)
+
+	def set_tuner_average_time(self, value):
+		self._daq.set(self._path + "tuner/averagetime", value)
+
+	class TunerMode(Enum):
+		tune_p_gain = 0
+		tune_i_gain = 1
+		tune_d_gain = 2
+		tune_d_filter_limit = 3
+
+	def set_tuner_mode(self, enum_):
+		self._daq.set(self._path + "tuner/mode", enum_.value)
