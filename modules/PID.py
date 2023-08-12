@@ -278,5 +278,5 @@ class PID():
 		tune_d_filter_limit = 3
 
 	def set_tuner_mode(self, enum_):
-		# Select tuner mode. 
+		# Select TunerMode. 
 		self._daq.set(self._path + "tuner/mode", enum_.value)

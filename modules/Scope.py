@@ -1,10 +1,97 @@
 from enum import Enum
 
+class Averager():
+	def __init__(self, daq, path):
+		self._daq = daq
+		self._path = path + "averager/"
+
+	class ResamplingMode(Enum):
+		linear = 0
+		pchip = 1
+
+	def set_resampling_mode(self, enum_):
+		# Specifies the resampling mode. When averaging scope data recorded at a low sampling rate that is aligned by a high resolution trigger, scope data must be resampled to keep the corresponding samples between averaged recordings aligned correctly in time relative to the trigger time.
+		self._daq.set(self._path + "resamplingmode", enum_.value)
+
+	def restart(self):
+		# Set to 1 to reset the averager. The module sets averager/restart back to 0 automatically.
+		self._daq.set(self._path + "restart", 1)
+
+	def set_weight(self, value):
+		# Specify the averaging behaviour. weight=0: Averaging disabled. weight>1: Moving average, updating last history entry.
+		self._daq.set(self._path + "weight", value)
+
+class FFT():
+	def __init__(self, daq, path):
+		self._daq = daq
+		self._path = path + "fft/"
+
+	def enable_power_calculation(self):
+		self._daq.set(self._path + "power", 1)
+		
+	def disable_power_calculation(self):
+		self._daq.set(self._path + "power", 0)
+
+	def enable_spectral_density(self):
+		self._daq.set(self._path + "spectraldensity", 1)
+
+	def disable_spectral_density(self):
+		self._daq.set(self._path + "spectraldensity", 0)
+
+	class Windows(Enum):
+		rectangular = 0
+		hann = 1
+		hamming = 2
+		blackman_harris = 3
+		exponential = 16
+		cos = 17
+		cos_squared = 18
+
+	def set_window(self, enum_):
+		self.daq.set(self._path + "window", enum_.value)
+
+
 class Scope():
 	def __init__(self, daq, dev_id, n):
 		self._daq = daq
 		self._path = dev_id + "/scope/" + str(n) + "/"
 
+		self.averager = Averager(self._daq, self.path)
+
+	def clear_history(self):
+		# Remove all records from the history list.
+		self._daq.set(self._path + "clearhistory", 1)
+
+	class Errors(Enum):
+		no_error = 0
+		errors = 1
+
+	def get_errors(self):
+		return Errors(self._daq.get(self._path + "error"))
+	
+	def set_history_length(self, value):
+		# Maximum number of entries stored in the measurement history.
+		self._daq.set(self._path + "historylength", value)
+
+	# def last_replaced ?
+
+	class DataProcessingMode(Enum):
+		passthrough = 0
+		exp_moving_average = 1
+		fft = 3
+
+	def set_data_processing_mode(self, enum_)
+		self._daq.set(self._path + "mode", enum_.value)
+
+	def get_records(self):
+		return self._daq.set(self._path + "records")
+	
+	# what is the stuff down here?
+
+
+	def set_external_scaling(self, value):
+		# Scaling to apply to the scope data transferred over API level 1 connection. Only relevant for HF2 Instruments.
+		self._daq.set(self._path + "externalscaling")
 
 	def enable_scope_channels(self, values):
 		# Activates the scope channels.
@@ -13,11 +100,12 @@ class Scope():
 
 	def enable_averaging_type(self, m, enum_):
 		# Selects between sample decimation and sample averaging. Averaging avoids aliasing, but may conceal signal peaks.
-		self._daq.set(self._path + "channel/" + str(m) + "/bwlimit", enum_.value)
+		self._daq.set(f"{self._path}channel/{str(m)}/bwlimit", enum_.value)
 
 	class AveragingType(Enum):
 		sample_averaging = 0
 		sample_decimation = 1
+
 
 	def set_fullscale(self, m, value):
 		# Indicates the full scale value of the scope channel.
